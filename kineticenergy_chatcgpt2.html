@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kinetic Energy Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f4f4f4;
+    }
+    .calculator {
+      background: white;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    #result {
+      font-weight: bold;
+      margin-top: 20px;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Kinetic Energy Calculator</h2>
+    <label for="mass">Mass (kg):</label>
+    <input type="number" id="mass" placeholder="Enter mass in kg" required>
+
+    <label for="speed">Speed (km/h):</label>
+    <input type="number" id="speed" placeholder="Enter speed in km/h" required>
+
+    <button onclick="calculateKE()">Calculate KE</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculateKE() {
+      const mass = parseFloat(document.getElementById("mass").value);
+      const speedKmh = parseFloat(document.getElementById("speed").value);
+
+      if (isNaN(mass) || isNaN(speedKmh) || mass <= 0 || speedKmh < 0) {
+        document.getElementById("result").textContent = "Please enter valid positive numbers.";
+        return;
+      }
+
+      const speedMs = speedKmh * 1000 / 3600;
+      const kineticEnergy = 0.5 * mass * speedMs * speedMs;
+
+      document.getElementById("result").textContent = 
+        `Kinetic Energy = ${kineticEnergy.toFixed(2)} joules`;
+    }
+  </script>
+</body>
+</html>
