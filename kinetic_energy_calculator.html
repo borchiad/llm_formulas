@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Energy Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .formula {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-size: 1.3em;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .unit-info {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .clear-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>⚡ Kinetic Energy Calculator</h1>
+        <div class="formula">KE = ½mv²</div>
+        
+        <div class="input-group">
+            <label for="mass">Mass (m)</label>
+            <input type="number" id="mass" placeholder="Enter mass" step="0.01" min="0">
+            <div class="unit-info">Unit: kilograms (kg)</div>
+        </div>
+
+        <div class="input-group">
+            <label for="speed">Speed (v)</label>
+            <input type="number" id="speed" placeholder="Enter speed" step="0.01" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="speedUnit">Speed Unit</label>
+            <select id="speedUnit">
+                <option value="ms">m/s (meters per second)</option>
+                <option value="kmh">km/h (kilometers per hour)</option>
+                <option value="mph">mph (miles per hour)</option>
+            </select>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateKineticEnergy()">Calculate Energy</button>
+        
+        <div class="result" id="result"></div>
+        
+        <button class="clear-btn" onclick="clearInputs()">Clear All</button>
+    </div>
+
+    <script>
+        function calculateKineticEnergy() {
+            const mass = parseFloat(document.getElementById('mass').value);
+            const speed = parseFloat(document.getElementById('speed').value);
+            const speedUnit = document.getElementById('speedUnit').value;
+            const resultDiv = document.getElementById('result');
+
+            // Validation
+            if (isNaN(mass) || isNaN(speed) || mass <= 0 || speed < 0) {
+                resultDiv.innerHTML = '⚠️ Please enter valid positive numbers for mass and speed';
+                resultDiv.className = 'result show';
+                resultDiv.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)';
+                return;
+            }
+
+            // Convert speed to m/s
+            let speedInMS = speed;
+            switch(speedUnit) {
+                case 'kmh':
+                    speedInMS = speed * (1000/3600); // km/h to m/s
+                    break;
+                case 'mph':
+                    speedInMS = speed * 0.44704; // mph to m/s
+                    break;
+                default:
+                    speedInMS = speed; // already in m/s
+            }
+
+            // Calculate kinetic energy: KE = 0.5 * m * v²
+            const kineticEnergy = 0.5 * mass * Math.pow(speedInMS, 2);
+
+            // Format result
+            let energyDisplay;
+            if (kineticEnergy >= 1000000) {
+                energyDisplay = `${(kineticEnergy / 1000000).toFixed(2)} MJ`;
+            } else if (kineticEnergy >= 1000) {
+                energyDisplay = `${(kineticEnergy / 1000).toFixed(2)} kJ`;
+            } else {
+                energyDisplay = `${kineticEnergy.toFixed(2)} J`;
+            }
+
+            resultDiv.innerHTML = `
+                <div style="font-size: 1.4em; margin-bottom: 10px;">🎯 Kinetic Energy</div>
+                <div style="font-size: 1.8em; font-weight: bold;">${energyDisplay}</div>
+                <div style="font-size: 0.9em; margin-top: 10px; opacity: 0.9;">
+                    Mass: ${mass} kg | Speed: ${speedInMS.toFixed(2)} m/s
+                </div>
+            `;
+            resultDiv.className = 'result show';
+            resultDiv.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+        }
+
+        function clearInputs() {
+            document.getElementById('mass').value = '';
+            document.getElementById('speed').value = '';
+            document.getElementById('speedUnit').value = 'ms';
+            document.getElementById('result').className = 'result';
+        }
+
+        // Allow Enter key to calculate
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateKineticEnergy();
+            }
+        });
+
+        // Add some sample calculations on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('mass').placeholder = 'e.g., 5 (a 5kg object)';
+                document.getElementById('speed').placeholder = 'e.g., 25 (25 km/h)';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
