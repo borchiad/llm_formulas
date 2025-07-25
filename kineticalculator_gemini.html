@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinetic Energy Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .calculator-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        .input-group input,
+        .input-group select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .input-group select {
+            width: 100%; /* Adjust for select element */
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            background-color: #e9ffe9;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #c3e6cb;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Kinetic Energy Calculator</h1>
+
+        <div class="input-group">
+            <label for="mass">Mass (kg):</label>
+            <input type="number" id="mass" placeholder="Enter mass" step="any" min="0" required>
+        </div>
+
+        <div class="input-group">
+            <label for="speed">Speed:</label>
+            <input type="number" id="speed" placeholder="Enter speed" step="any" min="0" required>
+            <select id="speedUnit">
+                <option value="ms">m/s</option>
+                <option value="kmh">km/h</option>
+            </select>
+        </div>
+
+        <button onclick="calculateKineticEnergy()">Calculate Kinetic Energy</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateKineticEnergy() {
+            const mass = parseFloat(document.getElementById('mass').value);
+            const speed = parseFloat(document.getElementById('speed').value);
+            const speedUnit = document.getElementById('speedUnit').value;
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(mass) || isNaN(speed) || mass < 0 || speed < 0) {
+                resultDiv.textContent = "Please enter valid positive numbers for mass and speed.";
+                resultDiv.style.color = "#dc3545"; /* Red for error */
+                resultDiv.style.backgroundColor = "#ffe9e9";
+                resultDiv.style.borderColor = "#f5c6cb";
+                resultDiv.style.display = "block";
+                return;
+            }
+
+            let speedInMetersPerSecond;
+
+            if (speedUnit === 'kmh') {
+                speedInMetersPerSecond = speed * (1000 / 3600); // Convert km/h to m/s
+            } else {
+                speedInMetersPerSecond = speed; // Already in m/s
+            }
+
+            const kineticEnergy = 0.5 * mass * (speedInMetersPerSecond * speedInMetersPerSecond);
+
+            resultDiv.textContent = `Kinetic Energy: ${kineticEnergy.toFixed(2)} Joules`;
+            resultDiv.style.color = "#28a745"; /* Green for success */
+            resultDiv.style.backgroundColor = "#e9ffe9";
+            resultDiv.style.borderColor = "#c3e6cb";
+            resultDiv.style.display = "block";
+        }
+    </script>
+</body>
+</html>
