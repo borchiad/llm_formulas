@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profit Margin Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    input[type="number"] {
+      padding: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Profit Margin Calculator</h2>
+
+  <label>
+    Cost Price ($):
+    <input type="number" id="cost" value="100" step="0.01" />
+  </label>
+
+  <label>
+    Profit Margin (%):
+    <input type="number" id="margin" value="20" step="0.01" />
+  </label>
+
+  <label>
+    Customer Discount (%):
+    <input type="number" id="discount" value="15" step="0.01" />
+  </label>
+
+  <label>
+    VAT Rate (%):
+    <input type="number" id="vat" value="23" step="0.01" />
+  </label>
+
+  <button onclick="calculatePrice()">Calculate</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculatePrice() {
+      const cost = parseFloat(document.getElementById("cost").value);
+      const margin = parseFloat(document.getElementById("margin").value) / 100;
+      const discount = parseFloat(document.getElementById("discount").value) / 100;
+      const vat = parseFloat(document.getElementById("vat").value) / 100;
+
+      // Let P be the base price
+      // After discount: 0.85 * P (or (1 - discount))
+      // Cost = (1 - margin) * (1 - discount) * P
+      const netFactor = (1 - margin) * (1 - discount);
+      const basePrice = cost / netFactor;
+
+      const discountedPrice = basePrice * (1 - discount);
+      const finalPrice = discountedPrice * (1 + vat);
+
+      document.getElementById("result").innerHTML = `
+        Base Price (before discount & VAT): $${basePrice.toFixed(2)}<br/>
+        Price After Discount (net): $${discountedPrice.toFixed(2)}<br/>
+        Final Price (with VAT): $${finalPrice.toFixed(2)}
+      `;
+    }
+  </script>
+</body>
+</html>

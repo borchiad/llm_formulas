@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Margin & Discount Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            transform: translateY(0);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 5px solid #667eea;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .results.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .result-value {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .main-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .main-result .result-label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .main-result .result-value {
+            color: white;
+            font-size: 20px;
+        }
+
+        .formula {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #718096;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Profit Margin & Discount Calculator</h1>
+        
+        <div class="input-group">
+            <label for="cost">Cost ($)</label>
+            <input type="number" id="cost" placeholder="Enter your cost" step="0.01" value="100">
+        </div>
+
+        <div class="input-group">
+            <label for="margin">Desired Profit Margin (%)</label>
+            <input type="number" id="margin" placeholder="Enter desired margin" step="0.01" value="20">
+        </div>
+
+        <div class="input-group">
+            <label for="discount">Customer Discount (%)</label>
+            <input type="number" id="discount" placeholder="Enter discount percentage" step="0.01" value="15">
+        </div>
+
+        <div class="input-group">
+            <label for="vat">VAT Rate (%)</label>
+            <input type="number" id="vat" placeholder="Enter VAT rate" step="0.01" value="23">
+        </div>
+
+        <button class="calculate-btn" onclick="calculate()">Calculate Price</button>
+
+        <div id="results" class="results">
+            <div class="main-result">
+                <div class="result-item">
+                    <span class="result-label">Base Price (Before Discount):</span>
+                    <span class="result-value" id="basePrice">$0.00</span>
+                </div>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Price After Discount:</span>
+                <span class="result-value" id="discountedPrice">$0.00</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Final Price (With VAT):</span>
+                <span class="result-value" id="finalPrice">$0.00</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Your Profit:</span>
+                <span class="result-value" id="profit">$0.00</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Actual Margin:</span>
+                <span class="result-value" id="actualMargin">0.00%</span>
+            </div>
+
+            <div class="formula">
+                <strong>Formula:</strong> Revenue needed = Cost ÷ (1 - Margin/100)<br>
+                Base Price = Revenue needed ÷ (1 - Discount/100)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const cost = parseFloat(document.getElementById('cost').value) || 0;
+            const marginPercent = parseFloat(document.getElementById('margin').value) || 0;
+            const discountPercent = parseFloat(document.getElementById('discount').value) || 0;
+            const vatPercent = parseFloat(document.getElementById('vat').value) || 0;
+
+            if (cost <= 0) {
+                alert('Please enter a valid cost greater than 0');
+                return;
+            }
+
+            if (marginPercent < 0 || marginPercent >= 100) {
+                alert('Profit margin must be between 0% and 99.99%');
+                return;
+            }
+
+            if (discountPercent < 0 || discountPercent >= 100) {
+                alert('Discount must be between 0% and 99.99%');
+                return;
+            }
+
+            // Calculate revenue needed to achieve desired margin
+            // Margin = (Revenue - Cost) / Revenue
+            // Revenue = Cost / (1 - Margin%)
+            const revenueNeeded = cost / (1 - marginPercent / 100);
+
+            // Calculate base price before discount
+            // After discount: Base * (1 - Discount%) = Revenue needed
+            // Base = Revenue needed / (1 - Discount%)
+            const basePrice = revenueNeeded / (1 - discountPercent / 100);
+
+            // Calculate other values
+            const discountedPrice = revenueNeeded;
+            const finalPrice = discountedPrice * (1 + vatPercent / 100);
+            const profit = revenueNeeded - cost;
+            const actualMargin = ((revenueNeeded - cost) / revenueNeeded) * 100;
+
+            // Display results
+            document.getElementById('basePrice').textContent = `$${basePrice.toFixed(2)}`;
+            document.getElementById('discountedPrice').textContent = `$${discountedPrice.toFixed(2)}`;
+            document.getElementById('finalPrice').textContent = `$${finalPrice.toFixed(2)}`;
+            document.getElementById('profit').textContent = `$${profit.toFixed(2)}`;
+            document.getElementById('actualMargin').textContent = `${actualMargin.toFixed(2)}%`;
+
+            // Show results with animation
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.add('show');
+        }
+
+        // Calculate on Enter key press
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+
+        // Calculate with initial values on page load
+        window.onload = function() {
+            calculate();
+        };
+    </script>
+</body>
+</html>
